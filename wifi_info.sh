@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Find all wifi ports on the computer and see if they have an IP
+
+AIRINT=$(networksetup -listallhardwareports | grep -A1 -i 'wi-fi\|airport' | grep en | grep -o "[^ ]*$")
+IP_AIR=$(ipconfig getifaddr $AIRINT)
+
+# Find all ethernet ports on the computer and see if they have an IP
+
+for ethernet in $(networksetup -listallhardwareports | grep -A1 'Ethernet' | grep en | grep -o "[^ ]*$")
+do
+	test=$( ifconfig $ethernet | grep "status: active" )
+	
+	if [ "$test" != "" ];
+	then
+		ETHINT=$ethernet
+	fi
+done
+
+IP_ETH=`ipconfig getifaddr $ETHINT`
+
+if [[ $IP_AIR = "" ]] && [[ $IP_ETH = "" ]];
+then
+	echo "hitp-state: warning"
+else
+	echo "hitp-state: ok"
+fi
+
+if [ ! -z $IP_AIR ];
+then
+	echo "hitp-enabled: YES"
+	echo "hitp-hidden: NO"
+	echo "hitp-title: Wi-Fi : $IP_AIR"
+else
+	echo "hitp-enabled: NO"
+	echo "hitp-hidden: YES"
+	echo "hitp-title: No Wi-Fi Address"
+fi
+
+exit 0
