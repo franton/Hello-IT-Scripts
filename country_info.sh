@@ -19,17 +19,16 @@ then
 	exit 1
 fi
 
-#department=$(curl -H "Accept: application/xml" -s -u "$apiuser:$apipass" "${jssurl}JSSResource/computers/udid/$udid/subset/location" | xpath "//computer/location/department/text()" 2> /dev/null)
 building=$(curl -H "Accept: application/xml" -s -u "$apiuser:$apipass" "${jssurl}JSSResource/computers/udid/$udid/subset/location" | xpath "//computer/location/building/text()" 2> /dev/null)
 
 if [ "$building" = "" ];
 then
-	echo "hitp-title: Missing Country Info"
+	echo "hitp-title: Missing Building Info"
 	echo "hitp-state: unavailable"	
 	exit 1
 fi
 
-echo "hitp-title: Country : $building"
+echo "hitp-title: Building : $building"
 echo "hitp-state: ok"
 
 exit 0
