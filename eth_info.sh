@@ -3,7 +3,11 @@
 # Find all wifi ports on the computer and see if they have an IP
 
 AIRINT=$(networksetup -listallhardwareports | grep -A1 -i 'wi-fi\|airport' | grep en | grep -o "[^ ]*$")
-IP_AIR=$(ipconfig getifaddr $AIRINT)
+
+if [ "$AIRINT" != "" ];
+then
+	IP_AIR=$(ipconfig getifaddr $AIRINT)
+fi
 
 # Find all ethernet ports on the computer and see if they have an IP
 
